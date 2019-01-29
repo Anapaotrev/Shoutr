@@ -19,6 +19,7 @@ Rails.application.routes.draw do
       post "follow" => "followed_users#create"
       delete "unfollow" => "followed_users#destroy"
     end
+    resources :followers, only: [:index]
     resource :password,
       controller: "clearance/passwords",
       only: [:create, :edit, :update]
