@@ -4,7 +4,11 @@ Rails.application.routes.draw do
   end
 
   root to: "homes#show"
-  resources :shouts, only: [:create, :show] do
+
+  post "text_shouts" => "shouts#create", defaults: { content_type: TextShout }
+  post "photo_shouts" => "shouts#create", defaults: { content_type: PhotoShout }
+
+  resources :shouts, only: [:show] do
     member do
       post "like" => "likes#create"
       delete "unlike" => "likes#destroy"
@@ -15,11 +19,11 @@ Rails.application.routes.draw do
   resource :session, only: [:create]
 
   resources :users, only: [:create, :show] do
+    resources :followers, only: [:index]
     member do
       post "follow" => "followed_users#create"
       delete "unfollow" => "followed_users#destroy"
     end
-    resources :followers, only: [:index]
     resource :password,
       controller: "clearance/passwords",
       only: [:create, :edit, :update]
